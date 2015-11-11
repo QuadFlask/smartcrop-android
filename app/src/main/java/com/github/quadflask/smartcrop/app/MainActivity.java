@@ -2,9 +2,7 @@ package com.github.quadflask.smartcrop.app;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -17,6 +15,7 @@ import com.github.quadflask.smartcrop.CropResult;
 import com.github.quadflask.smartcrop.Options;
 import com.github.quadflask.smartcrop.SmartCrop;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 
 import butterknife.Bind;
@@ -77,21 +76,17 @@ public class MainActivity extends AppCompatActivity {
                     .create(new Observable.OnSubscribe<CropResult>() {
                         @Override
                         public void call(Subscriber<? super CropResult> subscriber) {
-                            Uri selectedImageUri = data.getData();
-                            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                            Uri uri = data.getData();
 
-                            Cursor cursor = getContentResolver().query(selectedImageUri, filePathColumn, null, null, null);
-                            cursor.moveToFirst();
+                            try {
+                                selectedImage[0] = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
 
-                            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                            String filePath = cursor.getString(columnIndex);
-                            cursor.close();
+                                CropResult cropResult = SmartCrop.analyze(Options.DEFAULT, selectedImage[0]);
 
-                            selectedImage[0] = BitmapFactory.decodeFile(filePath);
-
-                            CropResult cropResult = SmartCrop.analyze(Options.DEFAULT, selectedImage[0]);
-
-                            subscriber.onNext(cropResult);
+                                subscriber.onNext(cropResult);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
                     })
                     .subscribeOn(Schedulers.computation())

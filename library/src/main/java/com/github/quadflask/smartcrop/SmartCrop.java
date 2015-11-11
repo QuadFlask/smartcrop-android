@@ -12,10 +12,11 @@ import java.util.List;
  * Created by flask on 2015. 10. 30..
  */
 public class SmartCrop {
-    private static final Paint debugTopCropRectPaint = new Paint();
+    private static final Paint DEBUG_TOP_CROP_RECT_PAINT = new Paint();
 
     static {
-        debugTopCropRectPaint.setColor(0xff00ccff);
+        DEBUG_TOP_CROP_RECT_PAINT.setColor(0xff00ccff);
+        DEBUG_TOP_CROP_RECT_PAINT.setStyle(Paint.Style.STROKE);
     }
 
     private Options options;
@@ -34,6 +35,7 @@ public class SmartCrop {
     }
 
     public CropResult analyze(Bitmap input) {
+        input = createScaleDown(input, 480);
         Image inputI = new Image(input);
         Image outputI = new Image(input.getWidth(), input.getHeight());
 
@@ -69,10 +71,15 @@ public class SmartCrop {
 
         if (topCrop != null) {
             Canvas outputCanvas = new Canvas(output);
-            outputCanvas.drawRect(new Rect(topCrop.x, topCrop.y, topCrop.x + topCrop.width, topCrop.y + topCrop.height), debugTopCropRectPaint);
+            outputCanvas.drawRect(new Rect(topCrop.x, topCrop.y, topCrop.x + topCrop.width, topCrop.y + topCrop.height), DEBUG_TOP_CROP_RECT_PAINT);
         }
 
         return result;
+    }
+
+    private Bitmap createScaleDown(Bitmap input, int maxSize) {
+        float rate = (float) maxSize / Math.max(input.getWidth(), input.getHeight());
+        return Bitmap.createScaledBitmap(input, (int) (rate * input.getWidth()), (int) (rate * input.getHeight()), true);
     }
 
     public Bitmap createCrop(Bitmap input, Crop crop) {
