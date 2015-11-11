@@ -32,7 +32,8 @@ public class Options {
     private float edgeWeight = -20f;
     private float outsideImportance = -.5f;
     private boolean ruleOfThirds = false;
-    private Bitmap.Config bitmapConfig = Bitmap.Config.ARGB_8888;
+    private Bitmap.Config bitmapConfig = Bitmap.Config.RGB_565;
+    private int maxFaceCount = 3;
 
     public int getCropWidth() {
         return cropWidth;
@@ -238,6 +239,15 @@ public class Options {
 
     public Options setBitmapConfig(Bitmap.Config bitmapConfig) {
         this.bitmapConfig = bitmapConfig;
+        return this;
+    }
+
+    public int getMaxFaceCount() {
+        return maxFaceCount;
+    }
+
+    public Options maxFacesCount(int maxFaceCount) {
+        this.maxFaceCount = maxFaceCount;
         return this;
     }
 }

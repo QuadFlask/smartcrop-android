@@ -1,9 +1,12 @@
 package com.github.quadflask.smartcrop;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.graphics.Rect;
+import android.media.FaceDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +46,7 @@ public class SmartCrop {
         edgeDetect(inputI, outputI);
         skinDetect(inputI, outputI);
         saturationDetect(inputI, outputI);
+        faceDetect(inputI, outputI);
 
         Bitmap output = Bitmap.createBitmap(input.getWidth(), input.getHeight(), options.getBitmapConfig());
         output.setPixels(outputI.getRGB(), 0, input.getWidth(), 0, 0, input.getWidth(), input.getHeight());
@@ -71,13 +75,56 @@ public class SmartCrop {
 
         if (topCrop != null) {
             Canvas outputCanvas = new Canvas(output);
-            outputCanvas.drawRect(new Rect(topCrop.x, topCrop.y, topCrop.x + topCrop.width, topCrop.y + topCrop.height), DEBUG_TOP_CROP_RECT_PAINT);
+            outputCanvas.drawRect(new Rect(topCrop.x, topCrop.y, topCrop.x + topCrop.width - 1, topCrop.y + topCrop.height - 1), DEBUG_TOP_CROP_RECT_PAINT);
         }
 
         return result;
     }
 
+    private void faceDetect(Image inputI, Image outputI) {
+        FaceDetector.Face[] faces = new FaceDetector.Face[options.getMaxFaceCount()];
+        FaceDetector faceDetector = new FaceDetector(inputI.width, inputI.height, faces.length);
+
+        if (faceDetector.findFaces(inputI.bitmap, faces) > 0) {
+            float maxEyeDistance = 1;
+            for (FaceDetector.Face face : faces)
+                if (face != null)
+                    maxEyeDistance = Math.max(maxEyeDistance, face.eyesDistance());
+
+            int[] rgb = outputI.getRGB();
+            for (FaceDetector.Face face : faces) {
+                if (face != null) {
+                    int score = clamp((int) (face.confidence() * face.eyesDistance() / maxEyeDistance * 255));
+
+                    PointF midPoint = new PointF();
+                    face.getMidPoint(midPoint);
+
+                    int x = (int) midPoint.x;
+                    int y = (int) midPoint.y;
+
+                    fillCircle(rgb, outputI.width, x, y, (int) (face.eyesDistance() / 2), score);
+                }
+            }
+        }
+    }
+
+    private void fillCircle(int[] rgb, int w, int cx, int cy, int cr, int value) {
+        for (int x = cx - cr; x < cx + cr; x++) {
+            for (int y = cy - cr; y < cy + cr; y++) {
+                int p = y * w + x;
+                if (0 < p && p < rgb.length) {
+                    int i = rgb[p];
+                    int r = clamp((i >> 16) + value);
+                    int g = clamp(((i >> 8) & 0xff) + value);
+                    int b = clamp((i & 0xff) + value);
+                    rgb[p] = 0xff000000 | (r << 16) | (g << 8) | b;
+                }
+            }
+        }
+    }
+
     private Bitmap createScaleDown(Bitmap input, int maxSize) {
+        input = input.copy(options.getBitmapConfig(), true);
         float rate = (float) maxSize / Math.max(input.getWidth(), input.getHeight());
         return Bitmap.createScaledBitmap(input, (int) (rate * input.getWidth()), (int) (rate * input.getHeight()), true);
     }
