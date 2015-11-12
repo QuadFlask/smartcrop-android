@@ -32,7 +32,7 @@ public class Options {
     private float edgeWeight = -20f;
     private float outsideImportance = -.5f;
     private boolean ruleOfThirds = false;
-    private Bitmap.Config bitmapConfig = Bitmap.Config.RGB_565;
+    private Bitmap.Config bitmapConfig = Bitmap.Config.RGB_565; // for face detection
     private int maxFaceCount = 3;
     private int analyzeSizeLimit = 480; // for speed up
 
