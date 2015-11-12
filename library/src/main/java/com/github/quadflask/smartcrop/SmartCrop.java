@@ -127,11 +127,13 @@ public class SmartCrop {
                 int p = y * w + x;
                 if (0 < p && p < rgb.length) {
                     int newVal = (int) (value * (cr - Math.sqrt((cx - x) * (cx - x) + (cy - y) * (cy - y))) / cr);
-                    int i = rgb[p];
-                    int r = clamp((i >> 16 & 0xff) + newVal);
-                    int g = clamp((i >> 8 & 0xff) + newVal);
-                    int b = clamp((i & 0xff) + newVal);
-                    rgb[p] = 0xff000000 | r << 16 | g << 8 | b;
+                    if (newVal > 0) {
+                        int i = rgb[p];
+                        int r = clamp((i >> 16 & 0xff) + newVal);
+                        int g = clamp((i >> 8 & 0xff) + newVal);
+                        int b = clamp((i & 0xff) + newVal);
+                        rgb[p] = 0xff000000 | r << 16 | g << 8 | b;
+                    }
                 }
             }
         }
