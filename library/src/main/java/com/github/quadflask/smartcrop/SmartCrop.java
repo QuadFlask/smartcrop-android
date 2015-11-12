@@ -51,7 +51,7 @@ public class SmartCrop {
     }
 
     public CropResult analyze(Bitmap input) {
-        input = createScaleDown(input, 480);
+        input = createScaleDown(input, options.getAnalyzeSizeLimit());
         Image inputI = new Image(input);
         Image outputI = new Image(input.getWidth(), input.getHeight());
 
@@ -128,10 +128,10 @@ public class SmartCrop {
                 if (0 < p && p < rgb.length) {
                     int newVal = (int) (value * (cr - Math.sqrt((cx - x) * (cx - x) + (cy - y) * (cy - y))) / cr);
                     int i = rgb[p];
-                    int r = clamp(((i >> 16) & 0xff) + newVal);
-                    int g = clamp(((i >> 8) & 0xff) + newVal);
+                    int r = clamp((i >> 16 & 0xff) + newVal);
+                    int g = clamp((i >> 8 & 0xff) + newVal);
                     int b = clamp((i & 0xff) + newVal);
-                    rgb[p] = 0xff000000 | (r << 16) | (g << 8) | b;
+                    rgb[p] = 0xff000000 | r << 16 | g << 8 | b;
                 }
             }
         }

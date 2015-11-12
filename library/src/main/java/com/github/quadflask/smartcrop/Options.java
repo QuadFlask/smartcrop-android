@@ -34,6 +34,7 @@ public class Options {
     private boolean ruleOfThirds = false;
     private Bitmap.Config bitmapConfig = Bitmap.Config.RGB_565;
     private int maxFaceCount = 3;
+    private int analyzeSizeLimit = 480; // for speed up
 
     public int getCropWidth() {
         return cropWidth;
@@ -248,6 +249,15 @@ public class Options {
 
     public Options maxFacesCount(int maxFaceCount) {
         this.maxFaceCount = maxFaceCount;
+        return this;
+    }
+
+    public int getAnalyzeSizeLimit() {
+        return analyzeSizeLimit;
+    }
+
+    public Options analyzeSizeLimit(int analyzeSizeLimit) {
+        this.analyzeSizeLimit = analyzeSizeLimit;
         return this;
     }
 }
