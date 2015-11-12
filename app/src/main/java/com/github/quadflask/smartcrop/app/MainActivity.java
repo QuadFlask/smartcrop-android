@@ -68,42 +68,30 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
+            Uri uri = data.getData();
             final ProgressDialog dialog = ProgressDialog.show(this, "processing...", "", true);
             final long time = System.currentTimeMillis();
-            final Bitmap[] selectedImage = new Bitmap[1];
+            try {
+                final Bitmap selectedImage = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                SmartCrop.analyzeWithObservable(Options.DEFAULT, selectedImage)
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Action1<CropResult>() {
+                            @Override
+                            public void call(CropResult cropResult) {
+                                long executionTime = System.currentTimeMillis() - time;
+                                tvExec.setText(new DecimalFormat("0.000s").format(executionTime / 1000.));
 
-            Observable
-                    .create(new Observable.OnSubscribe<CropResult>() {
-                        @Override
-                        public void call(Subscriber<? super CropResult> subscriber) {
-                            Uri uri = data.getData();
+                                ivSrc.setImageBitmap(selectedImage);
+                                ivDebug.setImageBitmap(cropResult.debugImage);
+                                ivResult.setImageBitmap(cropResult.resultImage);
 
-                            try {
-                                selectedImage[0] = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-
-                                CropResult cropResult = SmartCrop.analyze(Options.DEFAULT, selectedImage[0]);
-
-                                subscriber.onNext(cropResult);
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                                dialog.hide();
                             }
-                        }
-                    })
-                    .subscribeOn(Schedulers.computation())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<CropResult>() {
-                        @Override
-                        public void call(CropResult cropResult) {
-                            long executionTime = System.currentTimeMillis() - time;
-                            tvExec.setText(new DecimalFormat("0.000s").format(executionTime / 1000.));
-
-                            ivSrc.setImageBitmap(selectedImage[0]);
-                            ivDebug.setImageBitmap(cropResult.debugImage);
-                            ivResult.setImageBitmap(cropResult.resultImage);
-
-                            dialog.hide();
-                        }
-                    });
+                        });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

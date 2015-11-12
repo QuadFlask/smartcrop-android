@@ -11,6 +11,9 @@ import android.media.FaceDetector;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
+import rx.Subscriber;
+
 /**
  * Created by flask on 2015. 10. 30..
  */
@@ -31,6 +34,16 @@ public class SmartCrop {
 
     public SmartCrop(Options options) {
         this.options = options;
+    }
+
+    public static Observable<CropResult> analyzeWithObservable(final Options options, final Bitmap input) {
+        return Observable
+                .create(new Observable.OnSubscribe<CropResult>() {
+                    @Override
+                    public void call(Subscriber<? super CropResult> subscriber) {
+                        subscriber.onNext(SmartCrop.analyze(options, input));
+                    }
+                });
     }
 
     public static CropResult analyze(Options options, Bitmap input) {
