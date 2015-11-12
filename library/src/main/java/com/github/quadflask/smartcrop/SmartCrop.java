@@ -102,7 +102,7 @@ public class SmartCrop {
                     int x = (int) midPoint.x;
                     int y = (int) midPoint.y;
 
-                    fillCircle(rgb, outputI.width, x, y, (int) (face.eyesDistance() / 2), score);
+                    fillCircle(rgb, outputI.width, x, y, (int) (face.eyesDistance() * 5), score);
                 }
             }
         }
@@ -113,10 +113,11 @@ public class SmartCrop {
             for (int y = cy - cr; y < cy + cr; y++) {
                 int p = y * w + x;
                 if (0 < p && p < rgb.length) {
+                    int newVal = (int) (value * (cr - Math.sqrt((cx - x) * (cx - x) + (cy - y) * (cy - y))) / cr);
                     int i = rgb[p];
-                    int r = clamp((i >> 16) + value);
-                    int g = clamp(((i >> 8) & 0xff) + value);
-                    int b = clamp((i & 0xff) + value);
+                    int r = clamp(((i >> 16) & 0xff) + newVal);
+                    int g = clamp(((i >> 8) & 0xff) + newVal);
+                    int b = clamp((i & 0xff) + newVal);
                     rgb[p] = 0xff000000 | (r << 16) | (g << 8) | b;
                 }
             }
