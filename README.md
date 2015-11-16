@@ -23,7 +23,7 @@ then add a library dependency
 
 ```groovy
 dependencies {
-	compile 'com.github.QuadFlask:colorpicker:[latestVersion]'
+	compile 'com.github.QuadFlask:smartcrop-android:v.0.0.0'
 }
 ```
 
@@ -37,7 +37,7 @@ dependencies {
 }
 ```
 
-> check out [latestVersion] at [releases](https://github.com/QuadFlask/colorpicker/releases)
+> check out [latestVersion] at [releases](https://github.com/QuadFlask/smartcrop-android/releases)
 
 ## Usage
 
