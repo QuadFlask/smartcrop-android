@@ -1,8 +1,53 @@
 # smartcrop-android
 smartcrop implementation in Java(Android)
 
+This library will analyze best crop position and size by calculating some features; edge, skin tone, staturation and face.
+
+
 ## Screenshot
 
+
+## Usage
+
+### With [RxJava](https://github.com/ReactiveX/RxJava)(+[RxAndroid](https://github.com/ReactiveX/RxAndroid))
+
+```java
+
+SmartCrop
+    .analyzeWithObservable(Options.DEFAULT.cropSquareSize(200), selectedImage)
+    .subscribeOn(Schedulers.computation())
+    .observeOn(AndroidSchedulers.mainThread())
+    .subscribe(new Action1<CropResult>() {
+        @Override
+        public void call(CropResult cropResult) {
+            // do what you want
+        }
+    });
+
+```
+
+### Without Rx
+
+> But I recommend using RxJava or background thread because it took some times(about 500ms in 2013 Nexus5) so that it may stop the UI refresh and make bad UX.
+
+```java
+// this code will block about 500ms
+CropResult cropResult = SmartCrop.analyze(Options.DEFAULT.cropSquareSize(200), selectedImage);
+
+```
+
+
+[CropResult.java](https://github.com/QuadFlask/smartcrop-android/blob/master/library/src/main/java/com/github/quadflask/smartcrop/CropResult.java)
+
+```java
+public class CropResult {
+    public final Crop topCrop; // The best crop x, y, width, height and score
+    public final List<Crop> crops;
+    public final Bitmap debugImage;
+    public final Bitmap resultImage; // cropped image from original image. Size is same with options.cropWidth/Height
+}
+
+```
 
 
 ## How to add dependency?
@@ -13,9 +58,9 @@ add remote maven url
 
 ```groovy
 repositories {
-	maven {
-		url "https://jitpack.io"
-	}
+    maven {
+        url "https://jitpack.io"
+    }
 }
 ```
 
@@ -23,7 +68,7 @@ then add a library dependency
 
 ```groovy
 dependencies {
-	compile 'com.github.QuadFlask:smartcrop-android:v.0.0.0'
+    compile 'com.github.QuadFlask:smartcrop-android:v.0.0.0'
 }
 ```
 
@@ -33,16 +78,19 @@ and add dependency
 
 ```groovy
 dependencies {
-	compile(name:'[arrFileName]', ext:'aar')
+    compile(name:'[arrFileName]', ext:'aar')
 }
 ```
 
 > check out [latestVersion] at [releases](https://github.com/QuadFlask/smartcrop-android/releases)
 
-## Usage
-
 
 ## Performance
+
+> Tested with Nexus5(2013) 
+
+```javascript
+```
 
 
 ## License
