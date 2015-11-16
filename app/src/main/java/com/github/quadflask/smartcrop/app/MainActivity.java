@@ -4,10 +4,10 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,15 +19,12 @@ import com.github.quadflask.smartcrop.SmartCrop;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.text.DecimalFormat;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.aprilapps.easyphotopicker.EasyImage;
-import rx.Observable;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -49,6 +46,20 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_options_settings) {
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @OnClick(R.id.btn_open)
     public void onClick(View v) {
         EasyImage.openGalleryPicker(MainActivity.this);
@@ -65,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                     final Bitmap selectedImage = BitmapFactory.decodeStream(new FileInputStream(imageFile));
                     final ProgressDialog dialog = ProgressDialog.show(MainActivity.this, "processing...", "", true);
                     final long time = System.currentTimeMillis();
-                    SmartCrop.analyzeWithObservable(Options.DEFAULT, selectedImage)
+                    SmartCrop.analyzeWithObservable(Options.DEFAULT.cropSquareSize(200), selectedImage)
                             .subscribeOn(Schedulers.computation())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Action1<CropResult>() {

@@ -34,7 +34,7 @@ public class Options {
     private boolean ruleOfThirds = false;
     private Bitmap.Config bitmapConfig = Bitmap.Config.RGB_565; // for face detection
     private int maxFaceCount = 3;
-    private int analyzeSizeLimit = 480; // for speed up
+    private int analyzeSizeLimit = 512; // for speed up
 
     public int getCropWidth() {
         return cropWidth;
@@ -50,6 +50,12 @@ public class Options {
     }
 
     public Options cropHeight(int cropHeight) {
+        this.cropHeight = cropHeight;
+        return this;
+    }
+
+    public Options cropSquareSize(int size) {
+        this.cropWidth = cropWidth;
         this.cropHeight = cropHeight;
         return this;
     }
