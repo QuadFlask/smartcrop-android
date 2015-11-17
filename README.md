@@ -14,7 +14,7 @@ This library will analyze best crop position and size by calculating some featur
 ```java
 
 SmartCrop
-    .analyzeWithObservable(Options.DEFAULT.cropSquareSize(200), selectedImage)
+    .analyzeWithObservable(Options.newInstance().cropSquareSize(200), selectedImage)
     .subscribeOn(Schedulers.computation())
     .observeOn(AndroidSchedulers.mainThread())
     .subscribe(new Action1<CropResult>() {
@@ -32,7 +32,7 @@ SmartCrop
 
 ```java
 // this code will block about 500ms
-CropResult cropResult = SmartCrop.analyze(Options.DEFAULT.cropSquareSize(200), selectedImage);
+CropResult cropResult = SmartCrop.analyze(Options.newInstance().cropSquareSize(200), selectedImage);
 
 ```
 
