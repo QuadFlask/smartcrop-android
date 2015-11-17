@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                     final Bitmap selectedImage = BitmapFactory.decodeStream(new FileInputStream(imageFile));
                     final ProgressDialog dialog = ProgressDialog.show(MainActivity.this, "processing...", "", true);
                     final long time = System.currentTimeMillis();
-                    SmartCrop.analyzeWithObservable(Options.DEFAULT.cropSquareSize(200), selectedImage)
+                    SmartCrop.analyzeWithObservable(Options.newInstance().cropSquareSize(200), selectedImage)
                             .subscribeOn(Schedulers.computation())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Action1<CropResult>() {
