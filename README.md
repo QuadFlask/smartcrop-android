@@ -3,6 +3,7 @@ smartcrop implementation in Java(Android)
 
 This library will analyze *best crop position and size* by calculating some features; edge, skin tone, staturation and face.
 
+> [original javascript version](https://github.com/jwagner/smartcrop.js/)
 
 ## Screenshot
 
