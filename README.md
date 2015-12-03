@@ -1,10 +1,14 @@
 # smartcrop-android
 smartcrop implementation in Java(Android)
 
-This library will analyze best crop position and size by calculating some features; edge, skin tone, staturation and face.
+This library will analyze *best crop position and size* by calculating some features; edge, skin tone, staturation and face.
 
 
 ## Screenshot
+
+![Sample app screenshot 1](https://github.com/QuadFlask/smartcrop-android/blob/master/captures/device-2015-11-16-235416.png?raw=true)
+
+![Sample app screenshot 2](https://github.com/QuadFlask/smartcrop-android/blob/master/captures/device-2015-11-16-235553.png?raw=true)
 
 
 ## Usage
@@ -28,7 +32,7 @@ SmartCrop
 
 ### Without Rx
 
-> But I recommend using RxJava or background thread because it took some times(about 500ms in 2013 Nexus5) so that it may stop the UI refresh and make bad UX.
+> But I recommend using RxJava or background thread because it took some times(about 500ms on 2013 Nexus5) so that it may stop the UI refresh and make bad UX.
 
 ```java
 // this code will block about 500ms
@@ -36,13 +40,14 @@ CropResult cropResult = SmartCrop.analyze(Options.newInstance().cropSquareSize(2
 
 ```
 
+#### Output
 
 [CropResult.java](https://github.com/QuadFlask/smartcrop-android/blob/master/library/src/main/java/com/github/quadflask/smartcrop/CropResult.java)
 
 ```java
 public class CropResult {
-    public final Crop topCrop; // The best crop x, y, width, height and score
-    public final List<Crop> crops;
+    public final Crop topCrop; // The best cropx, y, width, height and score
+    public final List<Crop> crops; // crop candidates
     public final Bitmap debugImage;
     public final Bitmap resultImage; // cropped image from original image. Size is same with options.cropWidth/Height
 }
@@ -85,12 +90,9 @@ dependencies {
 > check out [latestVersion] at [releases](https://github.com/QuadFlask/smartcrop-android/releases)
 
 
-## Performance
+## Features
 
-> Tested with Nexus5(2013) 
-
-```javascript
-```
+skin, edge, staturation is almost same with javascript version. Android's face detection is used which draw white circle at face
 
 
 ## License
