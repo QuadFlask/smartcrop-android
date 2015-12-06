@@ -1,4 +1,5 @@
 # smartcrop-android
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-smartcrop--android-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/2871)
 [![Platform](https://img.shields.io/badge/platform-android-green.svg)](http://developer.android.com/index.html)
 [![API](https://img.shields.io/badge/API-15+-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=15)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](http://opensource.org/licenses/MIT)
