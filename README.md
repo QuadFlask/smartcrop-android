@@ -79,7 +79,7 @@ then add a library dependency
 
 ```groovy
 dependencies {
-    compile 'com.github.QuadFlask:smartcrop-android:v.0.0.0'
+    compile 'com.github.QuadFlask:smartcrop-android:0.0.1'
 }
 ```
 
