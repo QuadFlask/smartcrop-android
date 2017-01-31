@@ -42,6 +42,7 @@ public class SmartCrop {
 					@Override
 					public void call(Subscriber<? super CropResult> subscriber) {
 						subscriber.onNext(SmartCrop.analyze(options, input));
+						subscriber.onCompleted();
 					}
 				});
 	}
